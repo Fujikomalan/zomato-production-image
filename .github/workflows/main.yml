@@ -1,0 +1,39 @@
+name: "Cafe Klang Image Building"
+
+on:
+  push:
+    branches:
+      - main
+    
+jobs:
+    
+  build:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+      packer_version: "1.11.2" 
+    steps:
+
+
+      - name: "Repository Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Packer installation"
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: ${{ env.packer_version }}
+
+      - name: "Packer init"
+        run: packer init .
+        working-directory: ./packer/
+
+      - name: "Packer validate"
+        run: packer validate .
+        working-directory: ./packer/
+
+      - name: "Packer build image"
+        run: packer build .
+        working-directory: ./packer/
