@@ -18,7 +18,7 @@ jobs:
 
 
       - name: "Repository Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "Packer installation"
         uses: hashicorp/setup-packer@main
@@ -31,9 +31,9 @@ jobs:
         working-directory: ./packer/
 
       - name: "Packer validate"
-        run: packer validate .
+        run: packer validate -var-file="variables.pkrvars.hcl" .
         working-directory: ./packer/
 
       - name: "Packer build image"
-        run: packer build .
+        run: packer build -var-file="variables.pkrvars.hcl" .
         working-directory: ./packer/
